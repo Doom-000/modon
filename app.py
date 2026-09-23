@@ -237,6 +237,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS user_account (
             username TEXT PRIMARY KEY,
             password TEXT NOT NULL,
+            email TEXT,
             employee_id INTEGER UNIQUE,
             FOREIGN KEY (employee_id) REFERENCES employee(employee_id) ON DELETE CASCADE
         );
@@ -285,6 +286,9 @@ def init_db():
         );
         """
     )
+    user_columns = {row[1] for row in conn.execute("PRAGMA table_info(user_account)").fetchall()}
+    if "email" not in user_columns:
+        conn.execute("ALTER TABLE user_account ADD COLUMN email TEXT")
 
     canonical_customer = conn.execute(
         """
@@ -468,18 +472,20 @@ def login():
     conn = get_db_connection()
     mock_users = conn.execute(
         """
-        SELECT ua.username, ua.employee_id, e.employee_name, e.position
+        SELECT ua.username, ua.employee_id,
+               COALESCE(e.employee_name, ua.username) AS employee_name,
+               COALESCE(e.position, 'บัญชีผู้ใช้') AS position
         FROM user_account ua
-        JOIN employee e ON e.employee_id = ua.employee_id
-        ORDER BY e.employee_name
+        LEFT JOIN employee e ON e.employee_id = ua.employee_id
+        ORDER BY ua.username
         """
     ).fetchall()
     conn.close()
 
     if request.method == "POST":
-        signup_username = request.form.get("signup_username", "").strip()
-        signup_email = request.form.get("signup_email", "").strip()
-        signup_password = request.form.get("signup_password", "").strip()
+        signup_username = (request.form.get("signup_username") or request.form.get("username") or "").strip()
+        signup_email = (request.form.get("signup_email") or request.form.get("email") or "").strip()
+        signup_password = (request.form.get("signup_password") or request.form.get("password") or "").strip()
 
         if signup_username or signup_email or signup_password:
             if not signup_username or not signup_email or not signup_password:
@@ -495,8 +501,8 @@ def login():
                 return render_template("login.html", mock_users=mock_users)
 
             conn.execute(
-                "INSERT INTO user_account (username, password, employee_id) VALUES (?, ?, NULL)",
-                (signup_username, signup_password),
+                "INSERT INTO user_account (username, password, email, employee_id) VALUES (?, ?, ?, NULL)",
+                (signup_username, signup_password, signup_email),
             )
             conn.commit()
             conn.close()
@@ -512,9 +518,11 @@ def login():
             conn = get_db_connection()
             account = conn.execute(
                 """
-                SELECT ua.username, ua.employee_id, e.employee_name, e.position
+                SELECT ua.username, ua.employee_id,
+                       COALESCE(e.employee_name, ua.username) AS employee_name,
+                       COALESCE(e.position, 'บัญชีผู้ใช้') AS position
                 FROM user_account ua
-                JOIN employee e ON e.employee_id = ua.employee_id
+                LEFT JOIN employee e ON e.employee_id = ua.employee_id
                 WHERE ua.username = ?
                 """,
                 (selected_user,),

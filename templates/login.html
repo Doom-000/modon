@@ -48,7 +48,7 @@
                         <select id="selected_user" name="selected_user" required>
                             <option value="">-- เลือกผู้ใช้งาน --</option>
                             {% for user in mock_users %}
-                                <option value="{{ user.username }}">{{ user.employee_name }} ({{ user.position }})</option>
+                                <option value="{{ user.username }}">{{ user.username }}{% if user.employee_name != user.username %} - {{ user.employee_name }}{% endif %}</option>
                             {% endfor %}
                         </select>
                     </div>
