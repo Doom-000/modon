@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard</h1>
+</div>
+
+<div class="summary-grid">
+    <div class="summary-box">
+        <h3>จำนวนลูกค้า</h3>
+        <div class="value">{{ customer_count }}</div>
+    </div>
+    <div class="summary-box">
+        <h3>จำนวนสินค้า</h3>
+        <div class="value">{{ product_count }}</div>
+    </div>
+    <div class="summary-box">
+        <h3>จำนวนการขาย</h3>
+        <div class="value">{{ sale_count }}</div>
+    </div>
+    <div class="summary-box">
+        <h3>รายได้รวม</h3>
+        <div class="value">฿ {{ revenue|int }}</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2 class="section-title">การขายล่าสุด</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>วันที่</th>
+                    <th>ลูกค้า</th>
+                    <th>พนักงาน</th>
+                    <th>ยอดรวม</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in recent_sales %}
+                    <tr>
+                        <td>{{ sale.sale_id }}</td>
+                        <td>{{ sale.sale_date }}</td>
+                        <td>{{ sale.customer_name }}</td>
+                        <td>{{ sale.employee_name }}</td>
+                        <td>฿ {{ sale.total_amount|int }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

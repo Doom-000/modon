@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Customer List{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>ข้อมูลลูกค้า</h1>
+    <div class="button-row">
+        <a class="edit-icon header-edit" href="{{ url_for('choose_customer_to_edit') }}" aria-label="แก้ไขลูกค้า" title="แก้ไขลูกค้า">✎</a>
+        <a class="btn btn-success" href="{{ url_for('add_customer') }}">+ เพิ่มลูกค้า</a>
+        <a class="btn btn-danger" href="{{ url_for('cancel_customers') }}">ยกเลิกลูกค้า</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>รหัสลูกค้า</th>
+                    <th>ชื่อ</th>
+                    <th>ที่อยู่</th>
+                    <th>เบอร์โทร</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                    <tr>
+                        <td>{{ customer.customer_id }}</td>
+                        <td>{{ customer.customer_name }}</td>
+                        <td>{{ customer.address_no or '-' }} {{ customer.sub_district or '' }} {{ customer.district or '' }} {{ customer.province or '' }} {{ customer.zip_code or '' }}</td>
+                        <td>{{ customer.phone_numbers or '-' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

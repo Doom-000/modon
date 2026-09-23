@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}แก้ไขสินค้า{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>แก้ไขข้อมูลสินค้า</h1>
+    <a class="btn" href="{{ url_for('products') }}">กลับหน้าสินค้า</a>
+</div>
+
+<div class="card">
+    <label for="product_id">เลือกสินค้าที่ต้องการแก้ไข</label>
+    <select id="product_id" name="product_id" onchange="if (this.value) window.location.href=this.value;">
+        <option value="">-- เลือกสินค้า --</option>
+        {% for product in products %}
+            <option value="{{ url_for('edit_product', product_id=product.product_id) }}">{{ product.product_name }} | {{ product.brand or '-' }} | รุ่น {{ product.model or '-' }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endblock %}

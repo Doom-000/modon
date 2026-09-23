@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Mobile Shop{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    {% if session.get('user') %}
+    <nav>
+        <div class="brand">Mobile Shop System</div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Dashboard</a>
+            <a href="{{ url_for('customers') }}">ลูกค้า</a>
+            <a href="{{ url_for('products') }}">สินค้า</a>
+            <a href="{{ url_for('sales') }}">การขาย</a>
+            <a href="{{ url_for('suppliers') }}">Supplier</a>
+            <a href="{{ url_for('logout') }}">Logout ({{ session.get('user') }})</a>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

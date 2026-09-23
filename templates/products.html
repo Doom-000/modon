@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Product List{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>ข้อมูลสินค้า</h1>
+    <div class="button-row">
+        <a class="edit-icon header-edit" href="{{ url_for('choose_product_to_edit') }}" aria-label="แก้ไขสินค้า" title="แก้ไขสินค้า">✎</a>
+        <a class="btn btn-success" href="{{ url_for('add_product') }}">+ เพิ่มสินค้า</a>
+        <a class="btn btn-danger" href="{{ url_for('cancel_products') }}">ยกเลิกสินค้า</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>รหัสสินค้า</th>
+                    <th>ชื่อสินค้า</th>
+                    <th>แบรนด์</th>
+                    <th>รุ่น</th>
+                    <th>ราคา</th>
+                    <th>สต็อก</th>
+                    <th>Supplier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.product_id }}</td>
+                        <td>{{ product.product_name }}</td>
+                        <td>{{ product.brand or '-' }}</td>
+                        <td>{{ product.model or '-' }}</td>
+                        <td>{{ "%.2f"|format(product.price) }}</td>
+                        <td>{{ product.stock_qty }}</td>
+                        <td>{{ product.suppliers or '-' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

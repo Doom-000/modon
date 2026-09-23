@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}ยกเลิกสินค้า{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>ยกเลิกสินค้า</h1>
+    <a class="btn" href="{{ url_for('products') }}">กลับหน้าสินค้า</a>
+</div>
+
+<div class="card">
+    <form method="POST" onsubmit="return confirm('ยืนยันการยกเลิกสินค้าที่เลือกหรือไม่?');">
+        <label for="product_id">เลือกสินค้าที่ต้องการยกเลิก</label>
+        <select id="product_id" name="product_id" required>
+            <option value="">-- เลือกสินค้า --</option>
+            {% for product in products %}
+                <option value="{{ product.product_id }}">
+                    {{ product.product_name }} | {{ product.brand or '-' }} | รุ่น {{ product.model or '-' }}
+                </option>
+            {% endfor %}
+        </select>
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit">ยกเลิกสินค้า</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

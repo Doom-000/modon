@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}ยกเลิกการขาย{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>ยกเลิกการขาย</h1>
+    <a class="btn" href="{{ url_for('sales') }}">กลับหน้าการขาย</a>
+</div>
+
+<div class="card">
+    <form method="POST" onsubmit="return confirm('ยืนยันการยกเลิกรายการขายที่เลือกหรือไม่?');">
+        <label for="sale_id">เลือกรายการขายที่ต้องการยกเลิก</label>
+        <select id="sale_id" name="sale_id" required>
+            <option value="">-- เลือกรายการขาย --</option>
+            {% for sale in sales %}
+                <option value="{{ sale.sale_id }}">
+                    เลขที่ {{ sale.sale_id }} | {{ sale.sale_date }} | {{ sale.customer_name }} | ฿ {{ sale.total_amount|int }}
+                </option>
+            {% endfor %}
+        </select>
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit">ยกเลิกการขาย</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Sales{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>ข้อมูลการขาย</h1>
+    <div class="button-row">
+        <a class="edit-icon header-edit" href="{{ url_for('choose_sale_to_edit') }}" aria-label="แก้ไขการขาย" title="แก้ไขการขาย">✎</a>
+        <a class="btn btn-success" href="{{ url_for('add_sale') }}">+ บันทึกการขาย</a>
+        <a class="btn btn-danger" href="{{ url_for('cancel_sales') }}">ยกเลิกการขาย</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>รหัสการขาย</th>
+                    <th>วันที่</th>
+                    <th>ลูกค้า</th>
+                    <th>พนักงาน</th>
+                    <th>ยอดรวม</th>
+                    <th>รายละเอียด</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                    <tr>
+                        <td>{{ sale.sale_id }}</td>
+                        <td>{{ sale.sale_date }}</td>
+                        <td>{{ sale.customer_name }}</td>
+                        <td>{{ sale.employee_name }}</td>
+                        <td>฿ {{ sale.total_amount|int }}</td>
+                        <td>
+                            {% for detail in sale_details %}
+                                {% if detail.sale_id == sale.sale_id %}
+                                    รุ่น: {{ detail.model or '-' }}<br>
+                                    ขนาดหน้าจอ: {{ detail.screen_size }}<br>
+                                    พื้นที่จัดเก็บ: {{ detail.storage_capacity }}<br>
+                                    RAM: {{ detail.ram }}<br>
+                                    สี: {{ detail.phone_color }}<br>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

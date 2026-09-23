@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'แก้ไขข้อมูลลูกค้า' if edit_mode else 'Add Customer' }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>{{ 'แก้ไขข้อมูลลูกค้า' if edit_mode else 'เพิ่มข้อมูลลูกค้า' }}</h1>
+</div>
+
+<div class="card">
+    <form method="POST">
+        <div class="form-grid">
+            <div>
+                <label for="customer_name">ชื่อ-นามสกุล</label>
+                <input id="customer_name" name="customer_name" value="{{ customer.customer_name if customer else '' }}" required>
+            </div>
+            <div>
+                <label for="address_no">บ้านเลขที่</label>
+                <input id="address_no" name="address_no" value="{{ customer.address_no if customer else '' }}">
+            </div>
+            <div>
+                <label for="sub_district">แขวง/ตำบล</label>
+                <input id="sub_district" name="sub_district" value="{{ customer.sub_district if customer else '' }}">
+            </div>
+            <div>
+                <label for="district">เขต/อำเภอ</label>
+                <input id="district" name="district" value="{{ customer.district if customer else '' }}">
+            </div>
+            <div>
+                <label for="province">จังหวัด</label>
+                <input id="province" name="province" value="{{ customer.province if customer else '' }}">
+            </div>
+            <div>
+                <label for="zip_code">รหัสไปรษณีย์</label>
+                <input id="zip_code" name="zip_code" value="{{ customer.zip_code if customer else '' }}">
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label for="phone_number_1">หมายเลขโทรศัพท์ (กรอกได้หลายเบอร์)</label>
+                <input id="phone_number_1" name="phone_number" value="{{ customer.phones[0] if customer and customer.phones|length > 0 else '' }}" placeholder="081-234-5678">
+                <br><br>
+                <input name="phone_number" value="{{ customer.phones[1] if customer and customer.phones|length > 1 else '' }}" placeholder="092-345-6789">
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn" type="submit">{{ 'บันทึกการแก้ไข' if edit_mode else 'บันทึกข้อมูล' }}</button>
+            <a class="btn btn-success" href="{{ url_for('customers') }}">กลับหน้า ลูกค้า</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

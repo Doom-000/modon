@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'แก้ไขข้อมูลการขาย' if edit_mode else 'Add Sale' }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>{{ 'แก้ไขข้อมูลการขาย' if edit_mode else 'บันทึกการขาย' }}</h1>
+</div>
+
+<div class="card">
+    <form method="POST">
+        <div class="form-grid">
+            <div>
+                <label for="customer_id">เลือกลูกค้า</label>
+                <select id="customer_id" name="customer_id" required>
+                    <option value="">-- เลือกลูกค้า --</option>
+                    {% for customer in customers %}
+                        <option value="{{ customer.customer_id }}" {% if sale and customer.customer_id == sale.customer_id %}selected{% endif %}>{{ customer.customer_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="employee_id">เลือกพนักงาน</label>
+                <select id="employee_id" name="employee_id" required>
+                    <option value="">-- เลือกพนักงาน --</option>
+                    {% for employee in employees %}
+                        <option value="{{ employee.employee_id }}" {% if sale and employee.employee_id == sale.employee_id %}selected{% endif %}>{{ employee.employee_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="product_id">เลือกสินค้า</label>
+                <select id="product_id" name="product_id" required>
+                    <option value="">-- เลือกสินค้า --</option>
+                    {% for product in products %}
+                        <option value="{{ product.product_id }}" {% if detail and product.product_id == detail.product_id %}selected{% endif %}>{{ product.product_name }} ({{ product.price }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="qty">จำนวน</label>
+                <input id="qty" name="qty" value="{{ detail.qty if detail else '' }}" type="number" min="1" required>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn" type="submit">{{ 'บันทึกการแก้ไข' if edit_mode else 'บันทึกการขาย' }}</button>
+            <a class="btn btn-success" href="{{ url_for('sales') }}">กลับหน้า การขาย</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

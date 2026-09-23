@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="login-shell">
+    <div class="auth-box">
+        <div class="auth-panel active" id="signup-panel">
+            <div class="auth-label">Create Account</div>
+            <h1>สร้างบัญชี</h1>
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-grid">
+                    <div style="grid-column: 1 / -1;">
+                        <label for="signup_username">Username</label>
+                        <input id="signup_username" name="username" required>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label for="signup_email">Email</label>
+                        <input id="signup_email" name="email" type="email" required>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label for="signup_password">Password</label>
+                        <div class="password-field">
+                            <input id="signup_password" name="password" type="password" required>
+                            <button type="button" class="toggle-password" aria-label="Show password">Show</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn" type="submit">สร้างบัญชี</button>
+                </div>
+            </form>
+
+            <div class="switch-row">
+                <span>มีบัญชีแล้ว?</span>
+                <button type="button" class="text-button" id="show-login">เข้าสู่ระบบ</button>
+            </div>
+        </div>
+
+        <div class="auth-panel" id="login-panel">
+            <div class="auth-label">Mock Login</div>
+            <h1>เข้าสู่ระบบ</h1>
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-grid">
+                    <div style="grid-column: 1 / -1;">
+                        <label for="selected_user">เลือกผู้ใช้งานจากฐานข้อมูล</label>
+                        <select id="selected_user" name="selected_user" required>
+                            <option value="">-- เลือกผู้ใช้งาน --</option>
+                            {% for user in mock_users %}
+                                <option value="{{ user.username }}">{{ user.employee_name }} ({{ user.position }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn" type="submit">เข้าระบบทันที</button>
+                </div>
+            </form>
+
+            <div class="mock-login-hint">
+                <strong>ตัวอย่าง:</strong> admin / manager
+            </div>
+
+            <div class="switch-row">
+                <span>ยังไม่มีบัญชี?</span>
+                <button type="button" class="text-button" id="show-signup">สร้างบัญชี</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const signupPanel = document.getElementById('signup-panel');
+    const loginPanel = document.getElementById('login-panel');
+    const showLoginBtn = document.getElementById('show-login');
+    const showSignupBtn = document.getElementById('show-signup');
+
+    function setPanel(panelName) {
+        const showSignup = panelName === 'signup';
+        signupPanel.classList.toggle('active', showSignup);
+        loginPanel.classList.toggle('active', !showSignup);
+    }
+
+    showLoginBtn?.addEventListener('click', () => setPanel('login'));
+    showSignupBtn?.addEventListener('click', () => setPanel('signup'));
+
+    document.querySelectorAll('.toggle-password').forEach((button) => {
+        button.addEventListener('click', () => {
+            const input = button.parentElement.querySelector('input');
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            button.textContent = isPassword ? 'Hide' : 'Show';
+            button.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+        });
+    });
+</script>
+{% endblock %}
